@@ -327,6 +327,12 @@ if(!empty($dbWords) && $wordlist==1 && $useMysql==1) {
   if(!$counter) {
     if(strlen($tempWords)>$maxCharsLimit) haltError(_TOO_MANY_CHARS);
     $tempWords = strtoupper($tempWords);
+    //++++++++++++++added by J 20160302 ---- fixes issue 1 ignoring GREEK accented characters in manual word entry+++
+    $search  = array("Ά", "Έ", "Ή", "Ί", "Ϊ", "ΐ", "Ό", "Ύ", "Ϋ", "ΰ", "Ώ"); 
+    $replace = array("Α", "Ε", "Η", "Ι", "Ι", "Ι", "Ο", "Υ", "Υ", "Υ", "Ω"); 
+    $string  = mb_strtoupper($string, "UTF-8"); 
+    $tempWords= str_replace($search, $replace, $tempWords); 
+    //----------------------------------------
     $tempWords = str_replace(" ", ",", $tempWords);
     $tempWords = ereg_replace("^[,]*","",$tempWords);
     if($languages[$language]!="Numbers") $tempWords = strtr($tempWords, ${$languages[$language]}[1], ${$languages[$language]}[0]);
