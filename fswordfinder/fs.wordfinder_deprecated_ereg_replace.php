@@ -1,7 +1,7 @@
 <?php
 ###########################################################
 # FS.WordFinder
-# Version: 3.5.1jonmod20181018
+# Version: 3.5.1
 # Author:  Robert
 # Email:   brathna@gmail.com
 # Website: http://fswordfinder.sourceforge.net/
@@ -62,8 +62,7 @@ ob_implicit_flush(0);
 
 ##### Get language of main form
 
-//$mainLang = preg_replace("~[@#$%^&*+\\/]","",$_COOKIE['mainLang']); //ORIG deprecated
-$mainLang = preg_replace("~[@#$%^&*+\\/]~","",$_COOKIE['mainLang']); // added by jon 181020
+$mainLang = ereg_replace("[@#$%^&*+\\/]","",$_COOKIE['mainLang']);
 if($mainLang=="") $mainLang = $defaultLanguageFile;
 if(!is_file($pathToLangDir."/".$mainLang)) haltError("default language file not found");
 @require_once($pathToLangDir."/".$mainLang);
@@ -170,9 +169,8 @@ if($_POST['more']=="no") $_POST['forPrint']=TRUE;
 
 ##### Check rows and columns
 
-$rows = preg_replace("~[^0-9]~","",$_POST['numRows']);
-$cols = preg_replace("~[^0-9]~","",$_POST['numCols']);
-
+$rows = ereg_replace("[^0-9]","",$_POST['numRows']);
+$cols = ereg_replace("[^0-9]","",$_POST['numCols']);
 
 if($rows<$minRows) $rows = $minRows;
 elseif($rows>$maxRows) $rows = $maxRows;
@@ -183,14 +181,13 @@ elseif($cols>$maxCols) $cols = $maxCols;
 
 ##### Check fontsize
 
-
-$fontSize = preg_replace("~[^0-9.]~","",$_POST['font']);
+$fontSize = ereg_replace("[^0-9.]","",$_POST['font']);
 if($fontSize=="") $fontSize = $fSize;
 
 
 ##### Check language
 
-$language = preg_replace("~[^0-9]~","",$_POST['language']);
+$language = ereg_replace("[^0-9]","",$_POST['language']);
 if($language>count($languages)-1 || $language<0 || $language=="") $language=0;
 
 
@@ -202,7 +199,7 @@ mt_srand ($srand);
 
 ##### Check number entered to pick words out of db
 
-$dbWords = preg_replace("~[^0-9]~","",$_POST['dbWords']);
+$dbWords = ereg_replace("[^0-9]","",$_POST['dbWords']);
 
 
 ##### Setup some variables for use in the picking of words
@@ -276,7 +273,7 @@ if(!empty($dbWords) && $wordlist==1 && $useMysql==1) {
   $contents = array();
   $a = 0;
   if(strlen($_POST['wordlist_lang'])>100) haltError(_TOO_LONG_FILENAME);
-  $filename = $pathToWordlists."/".preg_replace("~[@#$%^&*+\\/]~","",$_POST['wordlist_lang']);
+  $filename = $pathToWordlists."/".ereg_replace("[@#$%^&*+\\/]","",$_POST['wordlist_lang']);
   $handle = fopen($filename, "r");
   if($handle) {
     while(!feof($handle)) {
@@ -300,7 +297,7 @@ if(!empty($dbWords) && $wordlist==1 && $useMysql==1) {
       $_contents[$a] = $rand;
       $contents[$_contents[$a]] = strtoupper($contents[$_contents[$a]]);
       $contents[$_contents[$a]] = strtr($contents[$_contents[$a]], ${$languages[$language]}[1], ${$languages[$language]}[0]);
-      $contents[$_contents[$a]] = preg_replace("~[^".$chars."]~", "", trim($contents[$_contents[$a]]));
+      $contents[$_contents[$a]] = ereg_replace("[^".$chars."]", "", trim($contents[$_contents[$a]]));
       $len = strlen($contents[$_contents[$a]]);
       if($len>=$minChars && $len<=$maxChars && $len<$rc) { $words[$a] = $contents[$_contents[$a]]; $maxGridSizeCounter+=$len; }
       if($maxGridSizeCounter>$maxCharsLimit) break;
@@ -337,9 +334,9 @@ if(!empty($dbWords) && $wordlist==1 && $useMysql==1) {
     $tempWords= str_replace($search, $replace, $tempWords); 
     //----------------------------------------
     $tempWords = str_replace(" ", ",", $tempWords);
-    $tempWords = preg_replace("~^[,]*~","",$tempWords);
+    $tempWords = ereg_replace("^[,]*","",$tempWords);
     if($languages[$language]!="Numbers") $tempWords = strtr($tempWords, ${$languages[$language]}[1], ${$languages[$language]}[0]);
-    $tempWords = preg_replace("~[^".$chars.",]~", "", $tempWords); //$tempWords = preg_replace("~[^".$chars.",]", "", $tempWords);
+    $tempWords = ereg_replace("[^".$chars.",]", "", $tempWords);
   }
 
   $temp = explode(",", $tempWords);
@@ -364,14 +361,14 @@ $unsortedWords = $words;
 
 ##### Check puzzle title
 
-$puzzleTitle = preg_replace("~[@#$%^&*+\\/]~","",$_POST['puzzleTitle']);
+$puzzleTitle = ereg_replace("[@#$%^&*+\\/]","",$_POST['puzzleTitle']);
 if(strlen($puzzleTitle)>$puzzleTitleSize) haltError(_TOO_LONG_TITLE);
 
 
 ##### Pick random words from user inputted word list
 
 if($_POST['randomWords']!="" && $_POST['randomWords']!=0 && empty($dbWords)) {
-  $randomWords = preg_replace("~[^0-9]~","",$_POST['randomWords']);
+  $randomWords = ereg_replace("[^0-9]","",$_POST['randomWords']);
   if(count($words)>$randomWords) {
 
     $temp = array();
@@ -537,11 +534,11 @@ if($_POST['alphaSort']) { sort($inserted); }
 
 ##### Get colors
 
-$backgroundColor = preg_replace("~[^0-9A-Za-z#]~","",$_POST['backgroundColor']);
+$backgroundColor = ereg_replace("[^0-9A-Za-z#]","",$_POST['backgroundColor']);
 if($backgroundColor=="") $backgroundColor = $bgColor;
-$fontColor = preg_replace("~[^0-9A-Za-z#]~","",$_POST['fontColor']);
+$fontColor = ereg_replace("[^0-9A-Za-z#]","",$_POST['fontColor']);
 if($fontColor=="") $fontColor = $fColor;
-$highlightColor = preg_replace("~[^0-9A-Za-z#]","",$_POST['highlightColor']);
+$highlightColor = ereg_replace("[^0-9A-Za-z#]","",$_POST['highlightColor']);
 if($highlightColor=="") $highlightColor = $highColor;
 
 
@@ -708,7 +705,7 @@ if($_POST['customLayout2']) {
     document.getElementById('grid').style.visibility = 'hidden';
     document.getElementById('list').style.visibility = 'hidden';
 
-<?php if(preg_match("~MSIE~",$_SERVER['HTTP_USER_AGENT']) && !preg_match("~Opera~",$_SERVER['HTTP_USER_AGENT'])) { ?>
+<?php if(ereg("MSIE",$_SERVER['HTTP_USER_AGENT']) && !ereg("Opera",$_SERVER['HTTP_USER_AGENT'])) { ?>
   window.clipboardData.setData('Text', saved);
   alert('<?= _CLIPBOARD; ?>');
   paused=0;
@@ -716,7 +713,7 @@ if($_POST['customLayout2']) {
 <?php } else { ?>
     document.getElementById('code').style.display = 'block';
     document.getElementById('area').value = saved;
-<?php if(preg_match("~Gecko~",$_SERVER['HTTP_USER_AGENT'])) { ?>
+<?php if(ereg("Gecko",$_SERVER['HTTP_USER_AGENT'])) { ?>
     document.getElementById('area').focus();
     document.getElementById('area').select();
 <?php } } ?>
@@ -1479,15 +1476,15 @@ if(isset($_POST['buttonUp']) || isset($_POST['buttonDown']) || isset($_POST['but
   $ar = array();
   list($te,$t_rows,$t_cols) = explode(",",$_POST['code']);
 
-  $t_rows = preg_replace("~[^0-9]~","",$t_rows);
-  $t_cols = preg_replace("~[^0-9]~","",$t_cols);
+  $t_rows = ereg_replace("[^0-9]","",$t_rows);
+  $t_cols = ereg_replace("[^0-9]","",$t_cols);
 
   if($t_rows<10) $t_rows = 10;
   elseif($t_rows>60) $t_rows = 60;
   if($t_cols<10) $t_cols = 10;
   elseif($t_cols>60) $t_cols = 60;
 
-  $shift = preg_replace("~[^0-9]~","",$_POST['shift']);
+  $shift = ereg_replace("[^0-9]","",$_POST['shift']);
   if($shift<1 || $shift=="") $shift = 1;
 
   for($a=0,$b=0;$a<$t_cols*$t_rows;$a=$a+$t_cols,$b++) {
@@ -1520,11 +1517,11 @@ if(isset($_POST['buttonUp']) || isset($_POST['buttonDown']) || isset($_POST['but
   $ar = array();
   list($te,$t_rows,$t_cols) = explode(",",$_POST['code']);
 
-  $t_rows = preg_replace("~[^0-9]~","",$t_rows);
-  $t_cols = preg_replace("~[^0-9]~","",$t_cols);
+  $t_rows = ereg_replace("[^0-9]","",$t_rows);
+  $t_cols = ereg_replace("[^0-9]","",$t_cols);
 
-  $n_rows = preg_replace("~[^0-9]~","",$_POST['xSize']);
-  $n_cols = preg_replace("~[^0-9]~","",$_POST['ySize']);
+  $n_rows = ereg_replace("[^0-9]","",$_POST['xSize']);
+  $n_cols = ereg_replace("[^0-9]","",$_POST['ySize']);
 
   if($t_rows<10) $t_rows = 10;
   elseif($t_rows>60) $t_rows = 60;
@@ -1567,14 +1564,14 @@ if(isset($_POST['buttonUp']) || isset($_POST['buttonDown']) || isset($_POST['but
 
 } elseif($_POST['reload']) {
   $te = explode(",",$_POST['code']);
-  $rows = preg_replace("~[^0-9]~","",$te[count($te)-2]);
-  $cols = preg_replace("~[^0-9]~","",$te[count($te)-1]);
+  $rows = ereg_replace("[^0-9]","",$te[count($te)-2]);
+  $cols = ereg_replace("[^0-9]","",$te[count($te)-1]);
   unset($te);
   $code = $_POST['code'];
 
 } else {
-  $rows = preg_replace("~[^0-9]~","",$_POST['xSize']);
-  $cols = preg_replace("~[^0-9]~","",$_POST['ySize']);
+  $rows = ereg_replace("[^0-9]","",$_POST['xSize']);
+  $cols = ereg_replace("[^0-9]","",$_POST['ySize']);
   if($rows<10) $rows = 10;
   elseif($rows>60) $rows = 60;
   if($cols<10) $cols = 10;
@@ -1804,8 +1801,8 @@ $mainLanguages = "";
 if (is_dir($dir)) {
   if ($dh = opendir($dir)) {
     while (($file = readdir($dh)) !== false) {
-      if($file!="." && $file!=".." && preg_match("~_main.php$~",$file)) {
-        $fileStripped = preg_replace("~_main.php$~","",$file);
+      if($file!="." && $file!=".." && ereg("_main.php$",$file)) {
+        $fileStripped = ereg_replace("_main.php$","",$file);
         $selected = ($mainLang==$file) ? "selected=\"selected\"" : "";
         $mainLanguages .= "<option value=\"".$file."\" ".$selected.">".$fileStripped."</option>";
       }
@@ -1830,9 +1827,9 @@ if($wordlist==1 && $useMysql==1) {
   if (is_dir($dir)) {
     if ($dh = opendir($dir)) {
       while (($file = readdir($dh)) !== false) {
-        if($file!="." && $file!=".." && preg_match("~.txt$~",$file)) {
-          $fileStripped = preg_replace("~_|.txt$~"," ",$file);
-          $fileStripped = preg_replace("~[@#$%^&*+\\/]~","",$fileStripped);
+        if($file!="." && $file!=".." && ereg(".txt$",$file)) {
+          $fileStripped = ereg_replace("_|.txt$"," ",$file);
+          $fileStripped = ereg_replace("[@#$%^&*+\\/]","",$fileStripped);
           $wordlist_options .= "<option value=\"".$file."\">".$fileStripped."</option>";
         }
       }
@@ -1843,13 +1840,13 @@ if($wordlist==1 && $useMysql==1) {
 
 if(isset($_COOKIE['fswordfinder'])) {
   $cookie = explode(",",$_COOKIE['fswordfinder']);
-  $rowsSaved = preg_replace("~[^0-9]~","",$cookie[0]);
-  $colsSaved = preg_replace("~[^0-9]~","",$cookie[1]);
-  $fontSizeSaved = preg_replace("~[^0-9.]~","",$cookie[2]);
-  $bgColorSaved = preg_replace("~[^0-9A-Za-z#]~","",$cookie[3]);
-  $fontColorSaved = preg_replace("~[^0-9A-Za-z#]~","",$cookie[4]);
-  $highColorSaved = preg_replace("~[^0-9A-Za-z#]~","",$cookie[5]);
-  $languageSaved = preg_replace("~[^0-9]~","",$cookie[6]);
+  $rowsSaved = ereg_replace("[^0-9]","",$cookie[0]);
+  $colsSaved = ereg_replace("[^0-9]","",$cookie[1]);
+  $fontSizeSaved = ereg_replace("[^0-9.]","",$cookie[2]);
+  $bgColorSaved = ereg_replace("[^0-9A-Za-z#]","",$cookie[3]);
+  $fontColorSaved = ereg_replace("[^0-9A-Za-z#]","",$cookie[4]);
+  $highColorSaved = ereg_replace("[^0-9A-Za-z#]","",$cookie[5]);
+  $languageSaved = ereg_replace("[^0-9]","",$cookie[6]);
   $borfSaved = $cookie[7];
   $diagSaved = $cookie[8];
   $upanddownSaved = $cookie[9];
@@ -1857,7 +1854,7 @@ if(isset($_COOKIE['fswordfinder'])) {
   $hideWordsSaved = $cookie[11];
   $wordsWindowSaved = $cookie[12];
   $forPrintSaved = $cookie[13];
-  $randomWordsSaved = preg_replace("~[^0-9]~","",$cookie[14]);
+  $randomWordsSaved = ereg_replace("[^0-9]","",$cookie[14]);
   $centerGridSaved = $cookie[15];
 //  $wordListSaved = $cookie[16]; // This setting isn't currently being saved
   $useLettersSaved = $cookie[16];
@@ -2366,9 +2363,9 @@ if($_POST['gridStyle']!="square") {
   <input type="hidden" name="numRows" value="<?= $rows; ?>" />
   <input type="hidden" name="numCols" value="<?= $cols; ?>" />
   <input type="hidden" name="gridStyle" value="<?= $gS; ?>" />
-  <input type="hidden" name="backgroundColor" value="<?= preg_replace("~[^0-9A-Za-z#]~","",$_POST['backgroundColor']); ?>" />
-  <input type="hidden" name="fontColor" value="<?= preg_replace("~[^0-9A-Za-z#]~","",$_POST['fontColor']); ?>" />
-  <input type="hidden" name="highlightColor" value="<?= preg_replace("~[^0-9A-Za-z#]~","",$_POST['highlightColor']); ?>" />
+  <input type="hidden" name="backgroundColor" value="<?= ereg_replace("[^0-9A-Za-z#]","",$_POST['backgroundColor']); ?>" />
+  <input type="hidden" name="fontColor" value="<?= ereg_replace("[^0-9A-Za-z#]","",$_POST['fontColor']); ?>" />
+  <input type="hidden" name="highlightColor" value="<?= ereg_replace("[^0-9A-Za-z#]","",$_POST['highlightColor']); ?>" />
   <input type="hidden" name="BorF" value="<?= $borf; ?>" />
   <input type="hidden" name="diag" value="<?= $diag; ?>" />
   <input type="hidden" name="upanddown" value="<?= $updo; ?>" />
