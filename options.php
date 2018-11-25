@@ -1,6 +1,9 @@
 <?php
 ###########################################################
 # Set the title of your page:
+//jon HARDCODED script 
+error_reporting(E_ERROR | E_PARSE); //jon 181124 fix messed encoding
+header('Content-type: text/html; charset=ISO-8859-7'); //jon 181124 fix messed encoding maybe put in fs.wordfinder.php line 558
 
 $title = "FS.WordFinder - Word Search Builder";
 
