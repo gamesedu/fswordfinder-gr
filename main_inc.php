@@ -224,7 +224,10 @@ document.write('<br /><input type="button" value="<?= _MAKE_CUSTOM; ?>" style="m
         <input type="checkbox" name="hideWords" style="margin-left:20px;" value="TRUE"<?= $hideWordsSaved; ?> /> <?= _HIDE_LIST; ?><br />
         <input type="checkbox" name="alphaSort" style="margin-left:20px;" value="TRUE"<?= $alphaSortSaved; ?> /> <?= _SORT_LIST; ?><br />
 
-<?php $alert = (ereg("MSIE",$_SERVER['HTTP_USER_AGENT'])) ? " onclick=\"ieWarning(this);\"" : ""; ?>
+<?php 
+      //$alert = (ereg("MSIE",$_SERVER['HTTP_USER_AGENT'])) ? " onclick=\"ieWarning(this);\"" : ""; //DEPRECATED
+ $alert = (preg_match("~MSIE~",$_SERVER['HTTP_USER_AGENT'])) ? " onclick=\"ieWarning(this);\"" : ""; //jon update 181123        
+          ?>
 <script type="text/javascript"><!--
 document.write('<input type="checkbox" name="wordsWindow" style="margin-left:20px;" value="TRUE"<?= $wordsWindowSaved; ?><?= $alert; ?> /> <?= _LIST_WINDOW; ?></li></ul>');
 //--></script>
