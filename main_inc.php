@@ -117,7 +117,8 @@ function externalLinks() {
 }
 window.onload = externalLinks;
 
-<?php if(ereg("MSIE",$_SERVER['HTTP_USER_AGENT'])) { ?>
+<?php //if(ereg("MSIE",$_SERVER['HTTP_USER_AGENT'])) { ?>
+<?php if(preg_match("~MSIE~",$_SERVER['HTTP_USER_AGENT']) && !preg_match("~Opera~",$_SERVER['HTTP_USER_AGENT'])) { ?>  
 function ieWarning(CONTROL) {
   if(CONTROL.checked) alert('<?= _IE_WARNING; ?>')
 }
