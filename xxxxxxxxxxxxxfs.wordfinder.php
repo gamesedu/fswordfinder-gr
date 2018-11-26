@@ -1215,7 +1215,6 @@ $hiding = 1;
 if($_POST['centerGrid']) { $echoThis .= "<table style=\"height:100%;margin-left:auto;margin-right:auto;text-align: left;\"><tr><td>"; }
 $echoThis .= "<table style=\"border:0px;\"><tr><td valign=\"top\"><div id=\"grid\">";
 $echoThis .= (!$_POST['wordsWindow'] && !$_POST['hideWords']) ? "<table border=\"0\" cellspacing=\"0\" style=\"border-".$border.":1px solid ".$fontColor.";\">" : "<table style=\"border:0px;\" cellspacing=\"0\">";
-
 for($x=1,$ran=1;$x<=$rows;$x++) {
   $echoThis .= "<tr>";
   $hiding = ($hiding) ? 0 : 1;
@@ -1226,28 +1225,28 @@ for($x=1,$ran=1;$x<=$rows;$x++) {
       $gridWordsTemp = explode(",",$gridWords[$x][$y]);
       $c = count($gridWordsTemp)-1;
 
-      $p=array();
-      $m=0;
-      //print_r($gridWordsTemp);// word list ok utf-8
-      foreach($gridWordsTemp as $g) {
-      	//echo("<BR>1243- ".$g);// 1 word  ok utf-8
-        for($q=0;$q<mb_strlen($g);$q++) {
-        	//echo"<BR>1245- q=$q , word g=$g g(q)=".mb_substr($g, $q, 1);
-          //$r = ord($g[$q]);
-          $r = mb_substr($g, $q, 1);
-          //$r=mb_substr($chars, $random, 1) ;
-         // print_r($g[$q]);
-          //echo("<BR>1239- g=".$g." , r=$r");// word list ok utf-8
-          //$r = $r + 20;
-          //$r = urlencode(chr_utf8($r));
-          //$r = (chr_utf8($r));
-          $p[$m] .= $r;
-          //echo("<BR>1244- p[m]=".$p[$m]." ,g=$g , r=$r");// word list ok utf-8
-          //print_r($p);
-        }
-        $m++;
-      }
-  	  //print_r($p[0]);
+$p=array();
+$m=0;
+//print_r($gridWordsTemp);// word list ok utf-8
+foreach($gridWordsTemp as $g) {
+	//echo("<BR>1243- ".$g);// 1 word  ok utf-8
+  for($q=0;$q<mb_strlen($g);$q++) {
+  	//echo"<BR>1245- q=$q , word g=$g g(q)=".mb_substr($g, $q, 1);
+    //$r = ord($g[$q]);
+    $r = mb_substr($g, $q, 1);
+    //$r=mb_substr($chars, $random, 1) ;
+   // print_r($g[$q]);
+    //echo("<BR>1239- g=".$g." , r=$r");// word list ok utf-8
+    //$r = $r + 20;
+    //$r = urlencode(chr_utf8($r));
+    //$r = (chr_utf8($r));
+    $p[$m] .= $r;
+    echo("<BR>1244- p[m]=".$p[$m]." ,g=$g , r=$r");// word list ok utf-8
+    //print_r($p);
+  }
+  $m++;
+}
+	  //print_r($p[0]);
       $gridTemp = "w=new Array('".$p[0]."'";
       //echo"<hR>1251-gridTemp"; print_r($gridTemp);
       //print_r($gridTemp);
@@ -1263,8 +1262,9 @@ for($x=1,$ran=1;$x<=$rows;$x++) {
       echo"<hR>1262-xyArray";print_r($xyArray);
       echo"<hR>1263-xyArray[gridWordsTemp[z=$z] "; print_r($xyArray[$gridWordsTemp]); echo "<hR size=10>";
       echo"<hR>1264-gridWordsTemp[z=$z] "; print_r($gridWordsTemp); echo "<hR size=10>";
-    }  //end of if($gridWords[$x][$y]!="") {
+    }
 
+    if($gridTemp==$grid) echo "<h1>EXACT MATCH</h1>";
 
     $per1 = (mt_rand(0,1)==1) ? "%" : "";
     $per2 = (mt_rand(0,1)==1) ? "%" : "";
@@ -1282,9 +1282,8 @@ for($x=1,$ran=1;$x<=$rows;$x++) {
 	  //mb_substr($chars, $random, 1);
 	  //print_r($chars[$random]);
       //print_r($grid[$x][$y][0]);
-      echo "<hr>GRID= ";print_r($grid);echo "<hr> "; ###########ΨΨΨΨ#####$r = mb_substr($g, $q, 1);##########################
-      $gridChar = $grid[$x][$y][0]; // from WORDLIST  //jon 181125c  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      echo "<br>1287@@  gridChar=$gridChar ,$grid[$x][$y][0]";
+      //print_r($grid); ##########################################
+      $gridChar = $grid[$x][$y][0]; // from WORDLIST  //jon 181125c
     }
 
     if(!$_POST['forPrint'] && !$_POST['wordsWindow']) {

@@ -1,11 +1,9 @@
 <?php
 ###########################################################
 # Set the title of your page:
-//jon HARDCODED script 
-error_reporting(E_ERROR | E_PARSE); //jon 181124 fix messed encoding
-header('Content-type: text/html; charset=ISO-8859-7'); //jon 181124 fix messed encoding maybe put in fs.wordfinder.php line 558
-
-$title = "FS.WordFinder - Word Search Builder";
+error_reporting(E_ERROR | E_PARSE);
+header('Content-type: text/html; charset=utf-8');
+$title = "FS.WordFinder-utf-8 - Word Search Builder";
 
 ###########################################################
 # Set the minimum and maximum number of chars allowed in each word.
@@ -106,7 +104,8 @@ $pathToGridstyles = "./gridStyles.php";
 ###########################################################
 # Change to point to the location of the default language file.
 
-$defaultLanguageFile = "English_main.php";
+//$defaultLanguageFile = "English_main.php";
+$defaultLanguageFile = "Greek_main.php";
 
 ###########################################################
 # Word list addon options

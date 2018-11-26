@@ -31,10 +31,11 @@ if($_SERVER['PHP_SELF']=="/main_inc.php") { die("You are not allowed to view thi
 else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="el-GR">
 <!-- FS.WordFinder 3.5.1 by Robert (http://fswordfinder.sourceforge.net) -->
 <head>
-<meta http-equiv="content-type" content="text/html; charset=<?= $charset; ?>" />
+<!--<meta http-equiv="content-type" content="text/html; charset=<?= $charset; ?>" />-->
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title><?= $title; ?></title>
 
 <style type="text/css">
@@ -175,7 +176,7 @@ function checkForm() {
       <table cellpadding="0" cellspacing="0" style="border:0px;width:388px;">
         <tr>
           <td><span class="inputTitle"><?= _NUMBER_WORDS; ?></span><div class="info">(<?= $max_wordlist; ?> <?= _MAX; ?>.)</div></td>
-          <td><input type="text" size="2" maxlength="3" name="dbWords" id="dbWords" onblur="if(this.value><?= $max_wordlist; ?>)this.value=<?= $max_wordlist; ?>;" /></td>
+          <td><input type="text" value=10 size="2" maxlength="3" name="dbWords" id="dbWords" onblur="if(this.value><?= $max_wordlist; ?>)this.value=<?= $max_wordlist; ?>;" /></td>
         </tr>
         <tr>
           <td><span class="inputTitle"><?= _WORDLIST; ?></span></td>

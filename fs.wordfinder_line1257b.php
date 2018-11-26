@@ -63,8 +63,7 @@ ob_implicit_flush(0);
 ##### Get language of main form
 
 //$mainLang = preg_replace("~[@#$%^&*+\\/]","",$_COOKIE['mainLang']); //ORIG deprecated
-@$mainLang = preg_replace("~[@#$%^&*+\\/]~","",$_COOKIE['mainLang']); // added by jon 181020
-$mainLang=$defaultLanguageFile;
+$mainLang = preg_replace("~[@#$%^&*+\\/]~","",$_COOKIE['mainLang']); // added by jon 181020
 if($mainLang=="") $mainLang = $defaultLanguageFile;
 if(!is_file($pathToLangDir."/".$mainLang)) haltError("default language file not found");
 @require_once($pathToLangDir."/".$mainLang);
@@ -416,15 +415,13 @@ if($_POST['customLayout2']) {
   $d=0;
   foreach($t as $word) {
     $u = explode(",",$word);
-    $u_len = mb_strlen($u[0]);
+    $u_len = strlen($u[0]);
     for($i=1;$i<=$u_len;$i++) {
       $x = ceil($u[$i]/$cols);
       $y = $cols - (($x*$cols)-$u[$i]);
       $co .= $u[$i].",";
       $grid[$x][$y][0] = $u[0][$i-1];
-      echo "<BR>425-u[0][i-1]".$u[0][$i-1];
       $gridWords[$x][$y] .= $u[0].",";
-      echo "<BR>425-gridWords[$x][$y]".$gridWords[$x][$y];
     }
     $tempInserted[$d] = $u[0];
     $xyArray[$tempInserted[$d]] = $co;
@@ -480,7 +477,7 @@ foreach($words as $word) {
     if($found) continue;
   }
 
-  $count = mb_strlen($word);
+  $count = strlen($word);
   if(mt_rand(1,2)==1) {
     $score = 0;
     $scoreXY = $scoreXYTemp = $dirXY = "";
@@ -555,7 +552,7 @@ if($xmlOutput!=1) {
 
 ##### Send no cache headers
 
-//header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
@@ -606,7 +603,7 @@ function reload() {
     }
     mouseIsDown = 0;
   }
-  t = '<?= mb_substr($savedProgress[2],0,-1); ?>';
+  t = '<?= substr($savedProgress[2],0,-1); ?>';
   if(t!='') {
     u = t.split(',');
     for(i=0;i<u.length;i++) document.getElementById(u[i]).onmousedown();
@@ -662,7 +659,7 @@ function pause(e) {
     <?php
 if($_POST['customLayout2']) {
   $tdec = "";
-  for($a=0;$a<(mb_strlen($_POST['data']));$a++) {
+  for($a=0;$a<(strlen($_POST['data']));$a++) {
     $temp = ord($_POST['data'][$a]);
     $temp = $temp + 20;
     $temp = chr($temp);
@@ -1004,7 +1001,6 @@ function binb2b64(binarray)
 }
 // End of SHA-1
 
-
 var highlighted = new Array();
 var startingCell = 0;
 var endingCell = 0;
@@ -1197,8 +1193,8 @@ $echoThis = "";
 if($_POST['useLetters']) {
   $ch = 0;
   $chars = array();
-  for($tok=mb_strlen($inserted)-1;$tok>=0;$tok--) {
-    for($kot=mb_strlen($inserted[$tok])-1;$kot>=0;$kot--) {
+  for($tok=strlen($inserted)-1;$tok>=0;$tok--) {
+    for($kot=strlen($inserted[$tok])-1;$kot>=0;$kot--) {
       $chars[$ch] = $inserted[$tok][$kot];
       $ch++;
     }
@@ -1215,7 +1211,6 @@ $hiding = 1;
 if($_POST['centerGrid']) { $echoThis .= "<table style=\"height:100%;margin-left:auto;margin-right:auto;text-align: left;\"><tr><td>"; }
 $echoThis .= "<table style=\"border:0px;\"><tr><td valign=\"top\"><div id=\"grid\">";
 $echoThis .= (!$_POST['wordsWindow'] && !$_POST['hideWords']) ? "<table border=\"0\" cellspacing=\"0\" style=\"border-".$border.":1px solid ".$fontColor.";\">" : "<table style=\"border:0px;\" cellspacing=\"0\">";
-
 for($x=1,$ran=1;$x<=$rows;$x++) {
   $echoThis .= "<tr>";
   $hiding = ($hiding) ? 0 : 1;
@@ -1226,45 +1221,27 @@ for($x=1,$ran=1;$x<=$rows;$x++) {
       $gridWordsTemp = explode(",",$gridWords[$x][$y]);
       $c = count($gridWordsTemp)-1;
 
-      $p=array();
-      $m=0;
-      //print_r($gridWordsTemp);// word list ok utf-8
-      foreach($gridWordsTemp as $g) {
-      	//echo("<BR>1243- ".$g);// 1 word  ok utf-8
-        for($q=0;$q<mb_strlen($g);$q++) {
-        	//echo"<BR>1245- q=$q , word g=$g g(q)=".mb_substr($g, $q, 1);
-          //$r = ord($g[$q]);
-          $r = mb_substr($g, $q, 1);
-          //$r=mb_substr($chars, $random, 1) ;
-         // print_r($g[$q]);
-          //echo("<BR>1239- g=".$g." , r=$r");// word list ok utf-8
-          //$r = $r + 20;
-          //$r = urlencode(chr_utf8($r));
-          //$r = (chr_utf8($r));
-          $p[$m] .= $r;
-          //echo("<BR>1244- p[m]=".$p[$m]." ,g=$g , r=$r");// word list ok utf-8
-          //print_r($p);
-        }
-        $m++;
-      }
-  	  //print_r($p[0]);
+$p=array();
+$m=0;
+foreach($gridWordsTemp as $g) {
+  for($q=0;$q<strlen($g);$q++) {
+    $r = ord($g[$q]);
+    $r = $r + 20;
+    $r = urlencode(chr($r));
+    $p[$m] .= $r;
+  }
+  $m++;
+}
+
       $gridTemp = "w=new Array('".$p[0]."'";
-      //echo"<hR>1251-gridTemp"; print_r($gridTemp);
-      //print_r($gridTemp);
+
       $xyTemp = "x=new Array('".mb_substr(str_replace(",","|",$xyArray[$gridWordsTemp[0]]),0,-1)."'";
-      //echo"<hR>1254-xyTemp";print_r($xyTemp);
-      //
+
       for($z=1;$z<$c;$z++) { $gridTemp .= ",'".$p[$z]."'"; $xyTemp .= ",'".substr(str_replace(",","|",$xyArray[$gridWordsTemp[$z]]),0,-1)."'"; }
 
       $gridTemp .= ")";
       $xyTemp .= ")";
-      echo"<hR>1260-gridTemp"; print_r($gridTemp);
-      echo"<hR>1261-xyTemp";print_r($xyTemp);
-      echo"<hR>1262-xyArray";print_r($xyArray);
-      echo"<hR>1263-xyArray[gridWordsTemp[z=$z] "; print_r($xyArray[$gridWordsTemp]); echo "<hR size=10>";
-      echo"<hR>1264-gridWordsTemp[z=$z] "; print_r($gridWordsTemp); echo "<hR size=10>";
-    }  //end of if($gridWords[$x][$y]!="") {
-
+    }
 
     $per1 = (mt_rand(0,1)==1) ? "%" : "";
     $per2 = (mt_rand(0,1)==1) ? "%" : "";
@@ -1282,9 +1259,8 @@ for($x=1,$ran=1;$x<=$rows;$x++) {
 	  //mb_substr($chars, $random, 1);
 	  //print_r($chars[$random]);
       //print_r($grid[$x][$y][0]);
-      echo "<hr>GRID= ";print_r($grid);echo "<hr> "; ###########ΨΨΨΨ#####$r = mb_substr($g, $q, 1);##########################
-      $gridChar = $grid[$x][$y][0]; // from WORDLIST  //jon 181125c  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      echo "<br>1287@@  gridChar=$gridChar ,$grid[$x][$y][0]";
+      print_r($grid);
+      $gridChar = $grid[$x][$y][0]; // from WORDLIST  //jon 181125c
     }
 
     if(!$_POST['forPrint'] && !$_POST['wordsWindow']) {
@@ -1327,13 +1303,12 @@ $p=$u="";
 foreach($xyArrayTemp as $g) {
   $u .= $g.",";
 }
-$u = mb_substr($u,0,-2);
-echo"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<hr size=50>";
-for($q=0;$q<mb_strlen($u);$q++) {
-  //$r = ord($u[$q]);
-  $r = mb_substr($u, $q, 1);
-  //$r = $r + 20;
-  //$r = urlencode(chr($r));
+$u = substr($u,0,-2);
+
+for($q=0;$q<strlen($u);$q++) {
+  $r = ord($u[$q]);
+  $r = $r + 20;
+  $r = urlencode(chr($r));
   $p .= $r;
 }
 $xyTemp = "v=\'".$p."\'";
@@ -1341,14 +1316,14 @@ $xyTemp = "v=\'".$p."\'";
     $print = (!$_POST['forPrint']) ? "<script type=\"text/javascript\">document.write(unescape('%3C')+'span id=\"".$inserted[$x]."r\" onmousedown=\"".$xyTemp.";r(\'".$inserted[$x]."\',v);\">(?)'+unescape('%3C')+'/span>')</script>" : "";
 
     if($_POST['lowerCase'] && $languages[$language]!="Numbers") {
-      $inWord = mb_strtr($inserted[$x], ${$languages[$language]}[0], ${$languages[$language]}[1]);
-      $inWord = mb_strtolower($inWord);
+      $inWord = strtr($inserted[$x], ${$languages[$language]}[0], ${$languages[$language]}[1]);
+      $inWord = strtolower($inWord);
     } else {
       $inWord = $inserted[$x];
-      echo"<BR> 1345 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbaaaaa   $inWord = $inserted[$x]<hr size=50>";
     }
 
     $echoThis .= "".$print."<span id=\"".$inserted[$x]."\">".$inWord."</span><br />";
+
     $t = ($_POST['wordList']=="bottom") ? 15*$y-1 : $rows*$y-1;
 
     if($x==$t) { $echoThis .= "</div></td><td valign=\"top\"><div style=\"margin-".$margin.": 15px; font-size: ".$fontSize."mm; font-family: Courier New\">"; $y++; }
@@ -1357,7 +1332,6 @@ $xyTemp = "v=\'".$p."\'";
 }
 }
 $echoThis .= "</tr></table>";
-echo"<BR> 1359 echoThis=" ;print_r($echoThis) ;echo "<hr size=50>";
 //next line messed greek letters
 //echo (!$_POST['forPrint'] && !$_POST['wordsWindow']) ? "\n\n<script type=\"text/javascript\">\n<!--\ndocument.write(unescape(\"".rawurlencode($echoThis)."\"));\n//-->\n</script>\n\n" : $echoThis;
 echo $echoThis; // jon simplified to display greek correctly
